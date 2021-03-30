@@ -1,20 +1,15 @@
 pipeline {
-    agent any 
-    stages {
-        stage('clean') { 
-            steps {
-               // sh "mvn clean"
-                echo "Hello Mahesh"
+    agent any
+    
+    stages{
+        stage("CheckOut") {
+            steps{
+               checkout([$class: 'GitSCM', branches: [[name: '*/master']], extensions: [], userRemoteConfigs: [[url: 'https://github.com/Mahesh8143/my-app.git']]])
             }
         }
-        stage('Test') { 
+        stage("Maven Build") {
             steps {
-                sh "mvn test"
-            }
-        }
-        stage('Package') { 
-            steps {
-                sh "mvn package"
+                sh 'mvn clean install -f my-app/pom.xml'
             }
         }
     }
